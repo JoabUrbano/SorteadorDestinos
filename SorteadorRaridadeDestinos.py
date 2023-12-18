@@ -1,5 +1,4 @@
 from random import randrange
-import time
 
 class SorteioRaridade():
     def __init__(self):
@@ -14,14 +13,12 @@ class SorteioRaridade():
         self.listEpicos = []
         self.listLendarios = []
 
-        self.tempoLimite = 5
-        self.tempoInicial = time.time()
     
     def carregarDestinos(self):
 
         nome_arquivo = 'destinos.txt'
         try:
-            arquivo = open(nome_arquivo, 'r', encoding=('raw_unicode_escape'))
+            arquivo = open(nome_arquivo, 'r', encoding='utf-8')
             destino = ''
             list = []
             for linha in arquivo.readlines():
@@ -73,44 +70,105 @@ class SorteioRaridade():
         self.carregarDestinos()
 
         for _ in range(numItens):
-            destino = randrange(1, 101)
+            if self.comum + self.incomum + self.raro + self.epico + self.lendario <= 1:
+                break
+            destino = randrange(1, self.comum + self.incomum + self.raro + self.epico + self.lendario)
             
-            if destino > 0 and destino <= self.comum and len(self.listComuns) > 0:
+            if destino <= self.comum and len(self.listComuns) > 0:
                 print(" " * 6 + "*** Destino Comum ***")
                 self.sortearDestino(self.listComuns)
-                self.comum -= 4
-                self.incomum += 3
-                self.raro += 1
+
+                if self.comum - 4 > 0:
+                    self.comum -= 4
+                    if len(self.listIncomuns) > 0 and len(self.listRaros) > 0:
+                        self.incomum += 3
+                        self.raro += 1
+                    
+                    elif len(self.listIncomuns) > 0:
+                        self.incomum += 4
+                    
+                    elif len(self.listRaros) > 0:
+                        self.raro += 4
+                    
+                    else:
+                        self.comum += 4     
+                       
+                if len(self.listComuns) <= 0:
+                    self.comum = 0
             
             elif destino > self.comum and destino <= (self.comum + self.incomum) and len(self.listIncomuns) > 0:
                 print(" " * 6 + "*** Destino Incomum ***")
                 self.sortearDestino(self.listIncomuns)
-                self.incomum -= 3
-                self.raro += 2
-                self.epico += 1
+
+                if self.incomum - 3 > 0:
+                    self.incomum -= 3
+                    if len(self.listRaros) > 0 and len(self.listEpicos) > 0:
+                        self.raro += 2
+                        self.epico += 1
+                    
+                    elif len(self.listRaros) > 0:
+                        self.raro += 3
+                    
+                    elif len(self.listEpicos) > 0:
+                        self.epico += 3
+                    
+                    else:
+                        self.incomum += 3    
+                       
+                if len(self.listIncomuns) <= 0:
+                    self.incomum = 0
             
             elif destino > (self.comum + self.incomum) and destino <= (self.comum + self.incomum + self.raro) and len(self.listRaros) > 0:
                 print(" " * 6 + "*** Destino Raro ***")
                 self.sortearDestino(self.listRaros)
-                self.raro -= 2
-                self.epico += 1
-                self.lendario += 1
+
+                if self.raro - 2 > 0:
+                    self.raro -= 2
+                    if len(self.listEpicos) > 0 and len(self.listLendarios) > 0:
+                        self.epico += 1
+                        self.lendario += 1
+                    
+                    elif len(self.listEpicos) > 0:
+                        self.epico += 2
+
+                    elif len(self.listLendarios) > 0:
+                        self.lendario += 2
+                    
+                    else:
+                        self.raro += 3
+
+                if len(self.listRaros) <= 0:
+                    self.raro = 0
             
             elif destino > (self.comum + self.incomum + self.raro) and destino <= (self.comum + self.incomum + self.raro + self.epico) and len(self.listEpicos) > 0:
                 print(" " * 6 + "*** Destino Epico ***")
                 self.sortearDestino(self.listEpicos)
-                self.epico -= 2
-                self.lendario += 2
+
+                if self.epico - 2 > 0:
+                    self.epico -= 2
+                    if len(self.listLendarios) > 0:
+                        self.lendario += 2
+                    
+                    else:
+                        self.epico += 2
+
+                if len(self.listEpicos) <= 0:
+                    self.epico = 0
             
             elif len(self.listLendarios) > 0:
                 print(" " * 6 + "*** Destino Lendario ***")
                 self.sortearDestino(self.listLendarios)
-                self.lendario -= 5
-                self.comum += 5
+
+                if self.lendario - 5 > 0:
+                    self.lendario -= 5
+                    if len(self.listComuns) > 0:
+                        self.comum += 5
+                    
+                    else:
+                        self.lendario += 5
+                
+                if len(self.listLendarios) <= 0:
+                    self.lendario = 0
             
             else:
-                numItens += 1
-            
-            if time.time() - self.tempoInicial > self.tempoLimite:
-                print("Tempo limite atingido. Encerrando o loop.")
                 break
