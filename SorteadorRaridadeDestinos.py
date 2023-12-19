@@ -2,6 +2,9 @@ from random import randrange
 
 class SorteioRaridade():
     def __init__(self):
+        """
+        Metodo construtor da classe SorteadorRaridade
+        """
         self.comum = 40
         self.incomum = 30
         self.raro = 15
@@ -15,6 +18,10 @@ class SorteioRaridade():
 
     
     def carregarDestinos(self):
+        """
+        Função para carregar dados do arquivo .txt nos arrays respectivos
+        de cada raridade
+        """
 
         nome_arquivo = 'destinos.txt'
         try:
@@ -60,12 +67,22 @@ class SorteioRaridade():
                 print(erro)
 
     def sortearDestino(self, list):
+        """
+        Sortear o item do array informado
+
+        :param list: [string]
+        """
 
         destinoSorteado = randrange(0, len(list))
         print("Sorteado: " + list[destinoSorteado])
         list.pop(destinoSorteado)
 
     def sortear(self, numItens):
+        """
+        Faz o sorteio da raridade do item, que muda conforme os sorteios ocorrem
+
+        :param numItens: int
+        """
 
         self.carregarDestinos()
 
